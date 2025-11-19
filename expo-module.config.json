@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android", "web"],
+  "apple": {
+    "modules": ["ExpoWeatherKitModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.weatherkit.ExpoWeatherKitModule"]
+  }
+}

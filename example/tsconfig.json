@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "expo-weather-kit": ["../src/index"],
+      "expo-weather-kit/*": ["../src/*"]
+    }
+  }
+}
