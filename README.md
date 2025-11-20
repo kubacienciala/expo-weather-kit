@@ -24,22 +24,6 @@ Modern Expo / React Native bindings for Apple WeatherKit. Retrieve current condi
 
 ---
 
-## Installation
-
-```bash
-npm install expo-weather-kit
-# or
-yarn add expo-weather-kit
-```
-
-Then install iOS native bits:
-
-```bash
-npx pod-install
-```
-
----
-
 ## Configure Your Expo Project
 
 Add / merge the following structure into `app.json` (or `app.config.js`). The indentation shows the full tree so it’s easy to copy into an existing config:
@@ -70,6 +54,23 @@ Add / merge the following structure into `app.json` (or `app.config.js`). The in
 >
 > - `com.apple.developer.weatherkit` tells Xcode to embed the WeatherKit entitlement in your provisioning profile.
 > - `expo-build-properties` ensures EAS / `expo run:ios` compiles against iOS 16+ (the minimum for WeatherKit).
+
+---
+
+## Installation
+
+```bash
+npm install expo-weather-kit
+# or
+yarn add expo-weather-kit
+```
+
+After you merge the configuration above, regenerate the native projects and pods:
+
+```bash
+npx expo prebuild --clean   # managed Expo: rebuilds ios/ with new entitlements + plugins
+npx pod-install             # in bare or after prebuild to sync CocoaPods
+```
 
 ---
 
@@ -136,6 +137,13 @@ type CurrentWeather = {
 ### `getWeatherQuery(options)`
 
 Pass booleans to opt into each dataset (current, hourly, daily, minute, alerts, availability). Optional `hourlyRange` / `dailyRange` (Unix seconds) let you limit datasets for custom charts.
+
+> **Range limits (Apple WeatherKit):**
+>
+> - Historical data is only available from **1 Aug 2021** onward.
+> - Forecasts can extend at most **10 days into the future**.
+> - Each request returns a maximum of **10 days**.
+> - A calendar day is included when local midnight falls within `[startDate, endDate)`.
 
 Returns:
 

@@ -15,6 +15,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -31,14 +32,28 @@ export default function App() {
   const defaultLatitude = 50.2080466;
   const defaultLongitude = 19.1660513;
 
+  const [latitudeInput, setLatitudeInput] = useState(
+    defaultLatitude.toString()
+  );
+  const [longitudeInput, setLongitudeInput] = useState(
+    defaultLongitude.toString()
+  );
+  const [hourlyRangeHours, setHourlyRangeHours] = useState('24');
+  const [dailyRangeDays, setDailyRangeDays] = useState('7');
+
+  const resolvedLatitude =
+    parseFloat(latitudeInput.replace(',', '.')) || defaultLatitude;
+  const resolvedLongitude =
+    parseFloat(longitudeInput.replace(',', '.')) || defaultLongitude;
+
   const fetchCurrentWeather = async () => {
     setLoading(true);
     setError(null);
     setQueryResult(null);
     try {
       const result = await ExpoWeatherKit.getCurrentWeather(
-        defaultLatitude,
-        defaultLongitude
+        resolvedLatitude,
+        resolvedLongitude
       );
       setWeather(result);
     } catch (err) {
@@ -57,8 +72,8 @@ export default function App() {
     setWeather(null);
     try {
       const options: WeatherOptions = {
-        latitude: defaultLatitude,
-        longitude: defaultLongitude,
+        latitude: resolvedLatitude,
+        longitude: resolvedLongitude,
         current: true,
         hourly: true,
         daily: true,
@@ -83,23 +98,29 @@ export default function App() {
     setError(null);
     setWeather(null);
     try {
-      const now = Date.now() / 1000; // Unix timestamp in seconds
-      const tomorrow = now + 24 * 60 * 60; // 24 hours later
-      const nextWeek = now + 7 * 24 * 60 * 60; // 7 days later
+      const now = Date.now() / 1000;
+      const hours = Math.max(
+        1,
+        Math.min(168, Number(hourlyRangeHours.replace(',', '.')) || 0)
+      );
+      const days = Math.max(
+        1,
+        Math.min(15, Number(dailyRangeDays.replace(',', '.')) || 0)
+      );
 
       const options: WeatherOptions = {
-        latitude: defaultLatitude,
-        longitude: defaultLongitude,
+        latitude: resolvedLatitude,
+        longitude: resolvedLongitude,
         current: true,
         hourly: true,
         hourlyRange: {
           start: now,
-          end: tomorrow,
+          end: now + hours * 60 * 60,
         },
         daily: true,
         dailyRange: {
           start: now,
-          end: nextWeek,
+          end: now + days * 24 * 60 * 60,
         },
         alerts: true,
         availability: true,
@@ -124,6 +145,47 @@ export default function App() {
         style={styles.container}
         contentContainerStyle={styles.content}>
         <Text style={styles.header}>WeatherKit Example</Text>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>Latitude</Text>
+          <TextInput
+            value={latitudeInput}
+            onChangeText={setLatitudeInput}
+            keyboardType='decimal-pad'
+            placeholder='Latitude'
+            style={styles.textInput}
+          />
+          <Text style={styles.inputLabel}>Longitude</Text>
+          <TextInput
+            value={longitudeInput}
+            onChangeText={setLongitudeInput}
+            keyboardType='decimal-pad'
+            placeholder='Longitude'
+            style={styles.textInput}
+          />
+          <View style={styles.rangeRow}>
+            <View style={styles.rangeColumn}>
+              <Text style={styles.inputLabel}>Hourly range (hours)</Text>
+              <TextInput
+                value={hourlyRangeHours}
+                onChangeText={setHourlyRangeHours}
+                keyboardType='number-pad'
+                placeholder='24'
+                style={styles.textInput}
+              />
+            </View>
+            <View style={styles.rangeColumn}>
+              <Text style={styles.inputLabel}>Daily range (days)</Text>
+              <TextInput
+                value={dailyRangeDays}
+                onChangeText={setDailyRangeDays}
+                keyboardType='number-pad'
+                placeholder='7'
+                style={styles.textInput}
+              />
+            </View>
+          </View>
+        </View>
 
         <View style={styles.buttonGroup}>
           <TouchableOpacity
@@ -449,6 +511,42 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
     fontSize: 14,
+  },
+  inputGroup: {
+    marginHorizontal: 20,
+    marginBottom: 12,
+    padding: 16,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  inputLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#555',
+    marginBottom: 6,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginBottom: 12,
+    fontSize: 14,
+    backgroundColor: '#fafafa',
+  },
+  rangeRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  rangeColumn: {
+    flex: 1,
   },
   groupHeader: {
     fontSize: 20,
