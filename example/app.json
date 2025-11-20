@@ -14,7 +14,15 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "expo.modules.weatherkit.example"
+      "deploymentTarget": "16.0",
+      "bundleIdentifier": "expo.modules.weatherkit.example",
+      "entitlements": {
+        "com.apple.developer.weatherkit": true
+      },
+      "appleTeamId": "56275CMVJ2",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -27,6 +35,22 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "16.0"
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "a9f4e468-dfac-4990-ab2c-a476c52077bd"
+      }
+    },
+    "owner": "kubacienciala"
   }
 }

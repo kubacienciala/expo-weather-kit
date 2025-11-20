@@ -21,14 +21,16 @@
     "expo-weather-kit",
     "ExpoWeatherKit"
   ],
-  "repository": "https://github.com/kubacienciala/expo-weather-kit",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kubacienciala/expo-weather-kit.git"
+  },
   "bugs": {
     "url": "https://github.com/kubacienciala/expo-weather-kit/issues"
   },
   "author": "kubacienciala <jakubciencialaa@gmail.com> (https://github.com/kubacienciala)",
   "license": "MIT",
   "homepage": "https://github.com/kubacienciala/expo-weather-kit#readme",
-  "dependencies": {},
   "devDependencies": {
     "@types/react": "~19.1.0",
     "expo-module-scripts": "^5.0.7",
@@ -39,5 +41,8 @@
     "expo": "*",
     "react": "*",
     "react-native": "*"
+  },
+  "directories": {
+    "example": "example"
   }
 }
