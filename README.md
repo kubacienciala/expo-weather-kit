@@ -110,6 +110,12 @@ const result = await ExpoWeatherKit.getWeatherQuery({
 
 console.log(result.hourly?.[0]?.apparentTemperature);
 console.log(result.alerts?.map((alert) => alert.summary));
+
+// Get attribution (required for displaying weather data)
+const attribution = await ExpoWeatherKit.getWeatherAttribution();
+console.log('Service:', attribution.serviceName);
+console.log('Legal Text:', attribution.legalAttributionText);
+// Display the Apple Weather mark and link to legalPageURL
 ```
 
 ### `getCurrentWeather(lat, lon)`
@@ -160,15 +166,49 @@ type WeatherQueryResult = {
 
 Each type mirrors the Swift data we serialize (temperature units, UV index categories, gust speed, etc.), so you never have to touch the native layer.
 
+### `getWeatherAttribution(): Promise<WeatherAttribution>`
+
+Returns attribution information required for displaying weather data from Apple WeatherKit. **This is a legal requirement** for apps that display weather data.
+
+```ts
+type WeatherAttribution = {
+  serviceName: string;
+  legalPageURL: string;
+  legalAttributionText: string;
+  combinedMarkDarkURL?: string;
+  combinedMarkLightURL?: string;
+  squareMarkURL?: string;
+};
+```
+
+**⚠️ Legal Requirements:**
+
+If your app displays any weather data from Apple (other than weather alerts or value-added services), you **must**:
+
+1. Display the **Apple Weather trademark** (the "Weather" mark) using the provided mark URLs (`combinedMarkLightURL`, `combinedMarkDarkURL`, or `squareMarkURL`).
+2. Provide a link to the **legal attribution page** (`legalPageURL`) that contains copyright information about weather data sources.
+3. Make the **legal attribution text** (`legalAttributionText`) available to users, especially for apps that cannot display the attribution URL contents in a Safari view.
+
+Example:
+
+```ts
+const attribution = await ExpoWeatherKit.getWeatherAttribution();
+console.log('Service:', attribution.serviceName);
+console.log('Legal Text:', attribution.legalAttributionText);
+console.log('Legal Page:', attribution.legalPageURL);
+// Display the mark image from attribution.combinedMarkLightURL or combinedMarkDarkURL
+```
+
 ---
 
 ## Example App
 
-`example/App.tsx` fetches current conditions plus any combination of hourly, daily, minute forecasts, alerts, and availability. It renders:
+`example/App.tsx` fetches current conditions plus any combination of hourly, daily, minute forecasts, alerts, availability, and attribution. It renders:
 
-- Two CTA buttons (Current Weather / Full Query / Query with custom ranges)
+- CTA buttons (Current Weather / Full Query / Query with custom ranges / Get Attribution)
 - Cards for each dataset with pretty typography
 - Alert list highlighting severity, source, and region
+- Attribution information with legal text and mark URLs
 
 Run it locally:
 

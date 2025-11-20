@@ -137,6 +137,28 @@ public class ExpoWeatherKitModule: Module {
             
             return result
         }
+        
+        AsyncFunction("getWeatherAttribution") { () async throws -> [String: Any] in
+            let attribution = try await WeatherService.shared.attribution
+            var result: [String: Any] = [
+                "serviceName": attribution.serviceName,
+                "legalPageURL": attribution.legalPageURL.absoluteString
+            ]
+            
+            // legalAttributionText is only available in iOS 16.4+
+            if #available(iOS 16.4, *) {
+                result["legalAttributionText"] = attribution.legalAttributionText
+            } else {
+                result["legalAttributionText"] = ""
+            }
+            
+            // These properties are non-optional URL types
+            result["combinedMarkDarkURL"] = attribution.combinedMarkDarkURL.absoluteString
+            result["combinedMarkLightURL"] = attribution.combinedMarkLightURL.absoluteString
+            result["squareMarkURL"] = attribution.squareMarkURL.absoluteString
+            
+            return result
+        }
     }
 }
 

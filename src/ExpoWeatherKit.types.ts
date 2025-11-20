@@ -93,6 +93,15 @@ export type WeatherAvailability = {
   minuteAvailability: string;
 };
 
+export type WeatherAttribution = {
+  serviceName: string;
+  legalPageURL: string;
+  legalAttributionText: string;
+  combinedMarkDarkURL?: string;
+  combinedMarkLightURL?: string;
+  squareMarkURL?: string;
+};
+
 export type WeatherQueryResult = {
   current?: CurrentWeather;
   hourly?: HourWeather[];

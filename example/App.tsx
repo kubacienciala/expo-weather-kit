@@ -4,6 +4,7 @@ import ExpoWeatherKit, {
   HourWeather,
   MinuteWeather,
   WeatherAlert,
+  WeatherAttribution,
   WeatherOptions,
   WeatherQueryResult,
 } from 'expo-weather-kit';
@@ -11,6 +12,7 @@ import { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -23,6 +25,9 @@ import {
 export default function App() {
   const [weather, setWeather] = useState<CurrentWeather | null>(null);
   const [queryResult, setQueryResult] = useState<WeatherQueryResult | null>(
+    null
+  );
+  const [attribution, setAttribution] = useState<WeatherAttribution | null>(
     null
   );
   const [loading, setLoading] = useState(false);
@@ -139,6 +144,27 @@ export default function App() {
     }
   };
 
+  const fetchAttribution = async () => {
+    setLoading(true);
+    setError(null);
+    setWeather(null);
+    setQueryResult(null);
+    setAttribution(null);
+    try {
+      const result = await ExpoWeatherKit.getWeatherAttribution();
+      setAttribution(result);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : 'Failed to fetch weather attribution';
+      setError(errorMessage);
+      Alert.alert('Error', errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -206,6 +232,12 @@ export default function App() {
             disabled={loading}>
             <Text style={styles.buttonText}>Query with Range</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={fetchAttribution}
+            disabled={loading}>
+            <Text style={styles.buttonText}>Get Attribution</Text>
+          </TouchableOpacity>
         </View>
 
         {loading && (
@@ -233,6 +265,13 @@ export default function App() {
           <View style={styles.group}>
             <Text style={styles.groupHeader}>Weather Query Result</Text>
             <WeatherQueryInfo result={queryResult} />
+          </View>
+        )}
+
+        {attribution && (
+          <View style={styles.group}>
+            <Text style={styles.groupHeader}>Weather Attribution</Text>
+            <AttributionInfo attribution={attribution} />
           </View>
         )}
       </ScrollView>
@@ -479,6 +518,71 @@ function WeatherQueryInfo({ result }: { result: WeatherQueryResult }) {
   );
 }
 
+function AttributionInfo({ attribution }: { attribution: WeatherAttribution }) {
+  return (
+    <View style={styles.queryContainer}>
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Service Name</Text>
+        <Text style={styles.sectionText}>{attribution.serviceName}</Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Legal Attribution Text</Text>
+        <Text style={styles.sectionText}>
+          {attribution.legalAttributionText}
+        </Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Legal Page URL</Text>
+        <Text style={styles.sectionText}>{attribution.legalPageURL}</Text>
+      </View>
+
+      {attribution.combinedMarkLightURL && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Combined Mark (Light)</Text>
+          <Image
+            source={{ uri: attribution.combinedMarkLightURL }}
+            style={styles.attributionImage}
+            resizeMode='contain'
+          />
+          <Text style={styles.sectionText}>
+            {attribution.combinedMarkLightURL}
+          </Text>
+        </View>
+      )}
+
+      {attribution.combinedMarkDarkURL && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Combined Mark (Dark)</Text>
+          <View style={styles.darkImageContainer}>
+            <Image
+              source={{ uri: attribution.combinedMarkDarkURL }}
+              style={styles.attributionImage}
+              resizeMode='contain'
+            />
+          </View>
+          <Text style={styles.sectionText}>
+            {attribution.combinedMarkDarkURL}
+          </Text>
+        </View>
+      )}
+
+      {attribution.squareMarkURL && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Square Mark</Text>
+          <Image
+            source={{ uri: attribution.squareMarkURL }}
+            style={{ ...styles.attributionImage, width: 64, height: 64 }}
+            resizeMode='contain'
+          />
+          <Text style={styles.sectionText}>{attribution.squareMarkURL}</Text>
+        </View>
+      )}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -598,6 +702,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginBottom: 4,
+  },
+  attributionImage: {
+    width: '100%',
+    height: 10,
+    marginVertical: 10,
+  },
+  darkImageContainer: {
+    backgroundColor: '#1c1c1e',
+    borderRadius: 8,
+    padding: 10,
+    marginVertical: 10,
   },
   forecastItem: {
     marginTop: 10,
