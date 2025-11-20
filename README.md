@@ -224,7 +224,7 @@ The example code serves as a reference implementation. You can copy patterns fro
 
 Here's a screen recording of the example app in action:
 
-https://github.com/kubacienciala/expo-weather-kit/assets/recording.MP4
+https://github.com/user-attachments/assets/862db7d2-bd4e-45ef-afe3-aedc66c8bc01
 
 > **Note:** The video demonstrates fetching current weather, hourly/daily forecasts, minute-by-minute precipitation, alerts, and attribution with mark images.
 
