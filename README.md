@@ -203,20 +203,30 @@ console.log('Legal Page:', attribution.legalPageURL);
 
 ## Example App
 
-`example/App.tsx` fetches current conditions plus any combination of hourly, daily, minute forecasts, alerts, availability, and attribution. It renders:
+`example/App.tsx` demonstrates the full WeatherKit API with a complete UI. It includes:
 
 - CTA buttons (Current Weather / Full Query / Query with custom ranges / Get Attribution)
 - Cards for each dataset with pretty typography
 - Alert list highlighting severity, source, and region
-- Attribution information with legal text and mark URLs
+- Attribution information with legal text and mark images
 
-Run it locally:
+**⚠️ Important:** The example app is configured with a specific Bundle ID and Apple Team ID. To run it, you must:
 
-```bash
-cd example
-npm install
-expo run:ios
-```
+1. Update `example/app.json` with your own:
+   - `bundleIdentifier` (must match a Bundle ID in your Apple Developer account)
+   - `appleTeamId` (your Apple Developer Team ID)
+2. Enable WeatherKit for that Bundle ID in the [Apple Developer Portal](https://developer.apple.com/account/resources/identifiers/list)
+3. Run `npx expo prebuild --clean` and `npx pod-install` after making changes
+
+The example code serves as a reference implementation. You can copy patterns from `example/App.tsx` into your own app.
+
+### Demo Video
+
+Here's a screen recording of the example app in action:
+
+https://github.com/kubacienciala/expo-weather-kit/assets/recording.MP4
+
+> **Note:** The video demonstrates fetching current weather, hourly/daily forecasts, minute-by-minute precipitation, alerts, and attribution with mark images.
 
 ---
 
