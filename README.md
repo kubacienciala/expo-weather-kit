@@ -234,6 +234,7 @@ https://github.com/user-attachments/assets/862db7d2-bd4e-45ef-afe3-aedc66c8bc01
 
 - ❌ _“Value of type ‘X’ has no member ‘Y’”_ – ensure you’re compiling with Xcode 15+ and iOS 16+ SDKs.
 - ❌ _“Missing entitlement com.apple.developer.weatherkit”_ – double‑check the Apple Developer portal toggle and regenerate credentials.
+- ❌ _“Error: The operation couldn't be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceListener.Errors error 2)”_ – this means you haven't enabled the **WeatherKit** service for your Bundle ID in the [Apple Developer Portal](https://developer.apple.com/account/resources/identifiers/list). Go to your App ID, scroll to App Services, and ensure WeatherKit is checked. Save and regenerate your provisioning profiles.
 - 🤔 Need more data sets (statistics, astronomical events)? PRs welcome!
 
 ---
