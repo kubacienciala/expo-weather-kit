@@ -94,7 +94,7 @@ const { latitude, longitude } = { latitude: 37.779, longitude: -122.419 };
 
 // Minimal: current conditions
 const current = await ExpoWeatherKit.getCurrentWeather(latitude, longitude);
-console.log(current.temperature, current.condition);
+console.log(current.temperature, current.condition, current.conditionCode);
 
 // Full control: fetch only the datasets you need
 const result = await ExpoWeatherKit.getWeatherQuery({
@@ -126,7 +126,8 @@ Returns a lightweight snapshot:
 type CurrentWeather = {
   temperature: number;
   temperatureUnit: string;
-  condition: string; // e.g. "cloudy"
+  condition: string; // localized display string from WeatherKit
+  conditionCode?: string; // stable enum code, e.g. "Cloudy" or "HeavyRain"
   humidity: number; // 0–1
   windSpeed: number;
   windSpeedUnit: string;

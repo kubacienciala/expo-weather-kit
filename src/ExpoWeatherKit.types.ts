@@ -4,6 +4,7 @@ export type CurrentWeather = {
   temperature: number;
   temperatureUnit: string;
   condition: string;
+  conditionCode?: string;
   humidity: number;
   windSpeed: number;
   windSpeedUnit: string;
