@@ -40,6 +40,7 @@ public class ExpoWeatherKitModule: Module {
                 "temperature": currentWeather.temperature.value,
                 "temperatureUnit": currentWeather.temperature.unit.symbol,
                 "condition": currentWeather.condition.description,
+                "conditionCode": currentWeather.condition.rawValue,
                 "humidity": currentWeather.humidity,
                 "windSpeed": currentWeather.wind.speed.value,
                 "windSpeedUnit": currentWeather.wind.speed.unit.symbol,
@@ -168,6 +169,7 @@ extension CurrentWeather {
             "temperature": temperature.value,
             "temperatureUnit": temperature.unit.symbol,
             "condition": condition.description,
+            "conditionCode": condition.rawValue,
             "humidity": humidity,
             "windSpeed": wind.speed.value,
             "windSpeedUnit": wind.speed.unit.symbol,
@@ -251,5 +253,4 @@ extension Forecast where Element == MinuteWeather {
         }
     }
 }
-
 
